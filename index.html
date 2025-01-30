@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <title>Invisible Text Injector</title>
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+  <!-- Ensure mobile responsiveness -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
@@ -120,6 +122,20 @@
     }
     .text-center a:hover {
         color: #81A1C1; /* Optional: Change color on hover */
+    }
+
+    /* ========== MEDIA QUERIES FOR MOBILE RESPONSIVENESS ========== */
+    @media (max-width: 768px) {
+      /* Reduce body margin on smaller screens */
+      body {
+        margin: 20px;
+      }
+      /* Make GitHub profile stack below container (no absolute positioning) */
+      .github-profile {
+        position: static;
+        transform: none;
+        margin-top: 20px;
+      }
     }
   </style>
 </head>
