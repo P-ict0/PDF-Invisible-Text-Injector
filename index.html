@@ -186,6 +186,10 @@
     const pdfFileInput = document.getElementById('pdfFile');
     const invisibleTextInput = document.getElementById('invisibleText');
 
+    function sanitizeInput(input) {
+      return input.replace(/[<>]/g, ''); // Remove angle brackets to prevent injection
+    }
+
     generateBtn.addEventListener('click', async () => {
       // Clear previous message
       messageEl.textContent = '';
@@ -197,18 +201,31 @@
         showMessage('Please select a PDF file.', true);
         return;
       }
+
+      const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB limit
+      if (file.size > MAX_FILE_SIZE) {
+        showMessage('File too large. Please select a file under 20MB.', true);
+        return;
+      }
+
+      if (file.type !== 'application/pdf') {
+        showMessage('Invalid file type. Please upload a valid PDF.', true);
+        return;
+      }
+
       const invisibleText = invisibleTextInput.value.trim();
       if (!invisibleText) {
         showMessage('Please enter some text to inject.', true);
         return;
       }
+      const sanitizedText = sanitizeInput(invisibleText);
 
       try {
         const arrayBuffer = await file.arrayBuffer();
         const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
         const firstPage = pdfDoc.getPages()[0];
 
-        firstPage.drawText(invisibleText, { x: 1, y: firstPage.getHeight() - 1, size: 0.01, color: PDFLib.rgb(1, 1, 1) });
+        firstPage.drawText(sanitizedText, { x: 1, y: firstPage.getHeight() - 1, size: 0.01, color: PDFLib.rgb(1, 1, 1) });
 
         const modifiedPdfBytes = await pdfDoc.save();
         const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
@@ -216,9 +233,13 @@
         link.href = URL.createObjectURL(blob);
         link.download = 'modified.pdf';
         document.body.appendChild(link);
-        link.click();
+        if (confirm('Do you want to download the modified PDF?')) {
+          link.click();
+          showMessage('Success! Your modified PDF has been downloaded.', false);
+        } else {
+          showMessage('Download canceled.', true);
+        }
         link.remove();
-        showMessage('Success! Your modified PDF has been downloaded.', false);
       } catch (err) {
         showMessage('Error modifying PDF: ' + err.message, true);
       }
