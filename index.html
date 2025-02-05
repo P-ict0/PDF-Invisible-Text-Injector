@@ -7,6 +7,9 @@
   <!-- Ensure mobile responsiveness -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
+  <!-- DISCLAIMER: This tool runs entirely on the client side. No data is sent to any server. -->
+
   <style>
     body {
         font-family: Arial, sans-serif;
@@ -26,6 +29,11 @@
         border-radius: 8px;
         text-align: center;
         position: relative;
+    }
+    .disclaimer {
+        margin-top: 1em;
+        font-size: 12px;
+        color: #D8DEE9;
     }
     label {
         display: block;
@@ -158,6 +166,9 @@
     <button id="generateBtn">Generate</button>
 
     <div id="message" class="message"></div>
+    <div class="disclaimer">
+      <p>Disclaimer: This tool runs entirely on the client side. No data is sent to any server.</p>
+    </div>
   </div>
     <br><br>
     <p class="text-center">Test if it was successful here: <a href="https://www.pdf2go.com/pdf-to-text">pdf-to-text ↗</a></p>
